@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { roommateAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -10,9 +10,9 @@ const CreateRoommate = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // ✅ CHECK IF USER HAS COMPLETED QUIZ
-  React.useEffect(() => {
-    if (!user.hasCompletedQuiz) {
+  // Check quiz completion
+  useEffect(() => {
+    if (user && !user.hasCompletedQuiz) {
       alert('Please complete your lifestyle quiz before creating a roommate listing');
       navigate('/quiz');
     }
@@ -59,25 +59,30 @@ const CreateRoommate = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4 max-w-3xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Find a Roommate</h1>
-          <p className="text-gray-600 mt-2">Tell us what you're looking for</p>
+    <div className="min-h-screen bg-slate-50/50 py-12 px-6">
+      <div className="max-w-2xl mx-auto space-y-8 animate-fade-in-up">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">List Yourself as a Roommate</h1>
+          <p className="text-slate-500 text-sm max-w-md mx-auto">Create a profile card detailing your budget, preferences, and ideal roommate demographics.</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white border border-slate-200/60 rounded-3xl p-6 md:p-8 shadow-premium relative overflow-hidden">
+          {/* Accent indicator */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+          
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-              {error}
+            <div className="bg-rose-50 border border-rose-100 text-rose-700 px-4 py-3 rounded-2xl text-sm mb-6 flex items-center space-x-2">
+              <span>⚠️</span>
+              <span className="font-medium">{error}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Looking For Count */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Number of Roommates *
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Number of Roommates Wanted *
               </label>
               <input
                 type="number"
@@ -87,13 +92,13 @@ const CreateRoommate = () => {
                 required
                 min="1"
                 max="5"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm placeholder:text-slate-400"
               />
             </div>
 
             {/* Gender Preference */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
                 Gender Preference *
               </label>
               <select
@@ -101,19 +106,21 @@ const CreateRoommate = () => {
                 value={formData.genderPreference}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
               >
-                <option value="FEMALE">Female</option>
-                <option value="MALE">Male</option>
-                <option value="OTHER">Any</option>
+                {GENDER_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
             </div>
 
-            {/* Age Range */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Minimum Age *
+            {/* Age Range Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Minimum Roommate Age *
                 </label>
                 <input
                   type="number"
@@ -123,13 +130,13 @@ const CreateRoommate = () => {
                   required
                   min="18"
                   max="100"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm placeholder:text-slate-400"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Maximum Age *
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Maximum Roommate Age *
                 </label>
                 <input
                   type="number"
@@ -139,31 +146,34 @@ const CreateRoommate = () => {
                   required
                   min="18"
                   max="100"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm placeholder:text-slate-400"
                 />
               </div>
             </div>
 
             {/* Budget */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Budget per Person (₹/month) *
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Monthly Budget per Person (₹) *
               </label>
-              <input
-                type="number"
-                name="budgetPerPerson"
-                value={formData.budgetPerPerson}
-                onChange={handleChange}
-                required
-                min="1000"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="10000"
-              />
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none text-sm">₹</span>
+                <input
+                  type="number"
+                  name="budgetPerPerson"
+                  value={formData.budgetPerPerson}
+                  onChange={handleChange}
+                  required
+                  min="1000"
+                  className="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm placeholder:text-slate-400"
+                  placeholder="10000"
+                />
+              </div>
             </div>
 
             {/* Move-in Date */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
                 Preferred Move-in Date *
               </label>
               <input
@@ -173,38 +183,38 @@ const CreateRoommate = () => {
                 onChange={handleChange}
                 required
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
               />
             </div>
 
             {/* Description */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                About Yourself & Roommate Guidelines
               </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 rows="4"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="Tell potential roommates about yourself and what you're looking for..."
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm placeholder:text-slate-400"
+                placeholder="Tell potential roommates about yourself, your cleaniness habits, and what kind of roommate you're looking for..."
               />
             </div>
 
-            {/* Submit Buttons */}
-            <div className="flex space-x-4 pt-4">
+            {/* Submit / Cancel Buttons */}
+            <div className="flex space-x-3 pt-4 border-t border-slate-100">
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold disabled:bg-gray-400"
+                className="flex-1 bg-slate-950 hover:bg-purple-600 text-white font-bold py-3 rounded-xl transition duration-200 text-xs uppercase tracking-wider shadow-sm disabled:bg-slate-200"
               >
-                {loading ? 'Creating...' : 'Create Listing'}
+                {loading ? 'Creating...' : 'Create Roommate Listing'}
               </button>
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="px-8 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                className="px-6 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wide transition duration-200"
               >
                 Cancel
               </button>

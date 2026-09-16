@@ -31,8 +31,6 @@ import CreateRoommate from "./components/listing/CreateRoommate";
 // Dashboard
 import Dashboard from "./components/dashboard/dashboard";
 
-import VerifyEmail from './pages/VerifyEmail';
-
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -55,7 +53,6 @@ function App() {
               <Route path="/apartments/:id" element={<ApartmentDetail />} />
               <Route path="/roommates" element={<RoommateSearch />} />
               <Route path="/roommates/:id" element={<RoommateDetail />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />  
 
               {/* Protected Routes */}
               <Route

@@ -104,248 +104,255 @@ const QuizForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Lifestyle Compatibility Quiz</h2>
-          <p className="text-gray-600 mt-2">
-            Help us find your perfect roommate match by answering these questions
+    <div className="min-h-screen bg-slate-50/50 py-12 px-6">
+      <div className="max-w-2xl mx-auto space-y-8 animate-fade-in-up">
+        {/* Title */}
+        <div className="text-center space-y-2">
+          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Lifestyle Profile Quiz</h2>
+          <p className="text-slate-500 text-sm max-w-md mx-auto">
+            Help us find your perfect roommate match by telling us about your lifestyle preferences.
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white border border-slate-200/60 rounded-3xl p-6 md:p-8 shadow-premium relative overflow-hidden">
+          {/* Header line accent */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+          
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-              {error}
+            <div className="bg-rose-50 border border-rose-100 text-rose-700 px-4 py-3 rounded-2xl text-sm mb-6 flex items-center space-x-2">
+              <span>⚠️</span>
+              <span className="font-medium">{error}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Sleep Schedule */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                1. What's your sleep schedule? *
-              </label>
-              <select
-                name="sleepSchedule"
-                value={formData.sleepSchedule}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                {SLEEP_SCHEDULE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Sleep Schedule */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Sleep Schedule
+                </label>
+                <select
+                  name="sleepSchedule"
+                  value={formData.sleepSchedule}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  {SLEEP_SCHEDULE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* Cleanliness Level */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                2. How would you rate your cleanliness? (1-10) *
-              </label>
-              <input
-                type="range"
-                name="cleanlinessLevel"
-                min="1"
-                max="10"
-                value={formData.cleanlinessLevel}
-                onChange={handleChange}
-                className="w-full"
-              />
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>Not Clean (1)</span>
-                <span className="font-semibold text-blue-600">{formData.cleanlinessLevel}</span>
-                <span>Very Clean (10)</span>
+              {/* Noise Tolerance */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Noise Tolerance
+                </label>
+                <select
+                  name="noiseTolerance"
+                  value={formData.noiseTolerance}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  {NOISE_TOLERANCE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Guest Frequency */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Guests Frequency
+                </label>
+                <select
+                  name="guestsFrequency"
+                  value={formData.guestsFrequency}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  {FREQUENCY_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Social Level */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Social Engagement
+                </label>
+                <select
+                  name="socialLevel"
+                  value={formData.socialLevel}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  {SOCIAL_LEVEL_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Drinking Option */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Do you drink alcohol?
+                </label>
+                <select
+                  name="drinking"
+                  value={formData.drinking}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  {DRINKING_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Pets Option */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Pet Compatibility
+                </label>
+                <select
+                  name="pets"
+                  value={formData.pets}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  {PET_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Cooking Frequency */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Cooking Frequency
+                </label>
+                <select
+                  name="cookingFrequency"
+                  value={formData.cookingFrequency}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  {FREQUENCY_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Cleanliness Level (1-10) Slider */}
+              <div className="space-y-1.5 flex flex-col justify-center">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Cleanliness Score: <span className="text-purple-600 font-extrabold">{formData.cleanlinessLevel}/10</span>
+                </label>
+                <input
+                  type="range"
+                  name="cleanlinessLevel"
+                  min="1"
+                  max="10"
+                  value={formData.cleanlinessLevel}
+                  onChange={handleChange}
+                  className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                />
+                <div className="flex justify-between text-[10px] text-slate-400 font-semibold">
+                  <span>Relaxed</span>
+                  <span>Meticulous</span>
+                </div>
               </div>
             </div>
 
-            {/* Noise Tolerance */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                3. What's your noise tolerance? *
-              </label>
-              <select
-                name="noiseTolerance"
-                value={formData.noiseTolerance}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                {NOISE_TOLERANCE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+            {/* Budget Range Section */}
+            <div className="border-t border-slate-100 pt-6 space-y-4">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Monthly Roommate Budget Range</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none text-sm">₹</span>
+                  <input
+                    type="number"
+                    name="budgetMin"
+                    value={formData.budgetMin}
+                    onChange={handleChange}
+                    required
+                    min="1000"
+                    placeholder="Min Budget"
+                    className="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                  />
+                </div>
+
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none text-sm">₹</span>
+                  <input
+                    type="number"
+                    name="budgetMax"
+                    value={formData.budgetMax}
+                    onChange={handleChange}
+                    required
+                    min="1000"
+                    placeholder="Max Budget"
+                    className="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent text-sm"
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Guest Frequency */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                4. How often do you have guests over? *
-              </label>
-              <select
-                name="guestsFrequency"
-                value={formData.guestsFrequency}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                {FREQUENCY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Smoking */}
-            <div>
-              <label className="flex items-center space-x-3">
+            {/* Smoking Checkbox */}
+            <div className="border-t border-slate-100 pt-6">
+              <label className="flex items-center space-x-3 cursor-pointer group">
                 <input
                   type="checkbox"
                   name="smoking"
                   checked={formData.smoking}
                   onChange={handleChange}
-                  className="w-5 h-5 text-blue-600"
+                  className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-slate-300 bg-slate-50"
                 />
-                <span className="text-sm font-medium text-gray-700">
-                  5. I smoke
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-slate-800 transition duration-150">
+                  I smoke cigarettes / vapes
                 </span>
               </label>
             </div>
 
-            {/* Drinking */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                6. Do you drink alcohol? *
-              </label>
-              <select
-                name="drinking"
-                value={formData.drinking}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                {DRINKING_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Pets */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                7. What's your pet situation? *
-              </label>
-              <select
-                name="pets"
-                value={formData.pets}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                {PET_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Cooking Frequency */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                8. How often do you cook? *
-              </label>
-              <select
-                name="cookingFrequency"
-                value={formData.cookingFrequency}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                {FREQUENCY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Social Level */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                9. How social are you? *
-              </label>
-              <select
-                name="socialLevel"
-                value={formData.socialLevel}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                {SOCIAL_LEVEL_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Budget Range */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  10. Minimum Budget (₹) *
-                </label>
-                <input
-                  type="number"
-                  name="budgetMin"
-                  value={formData.budgetMin}
-                  onChange={handleChange}
-                  required
-                  min="1000"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Maximum Budget (₹) *
-                </label>
-                <input
-                  type="number"
-                  name="budgetMax"
-                  value={formData.budgetMax}
-                  onChange={handleChange}
-                  required
-                  min="1000"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex space-x-4">
+            {/* Form actions */}
+            <div className="flex space-x-3 pt-4 border-t border-slate-100">
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold disabled:bg-gray-400"
+                className="flex-1 bg-slate-950 hover:bg-purple-600 text-white font-bold py-3 rounded-xl transition duration-200 text-xs uppercase tracking-wider shadow-sm disabled:bg-slate-200"
               >
-                {loading ? 'Saving...' : existingQuiz ? 'Update Quiz' : 'Submit Quiz'}
+                {loading ? 'Saving...' : existingQuiz ? 'Update Lifestyle Profile' : 'Save Lifestyle Profile'}
               </button>
 
               {existingQuiz && (
                 <button
                   type="button"
                   onClick={() => navigate('/dashboard')}
-                  className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                  className="px-6 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wide transition duration-200"
                 >
                   Cancel
                 </button>

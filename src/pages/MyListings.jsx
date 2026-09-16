@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apartmentAPI, roommateAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import Loading from '../components/common/Loading';
 
 const MyListings = () => {
   const navigate = useNavigate();
@@ -48,148 +47,209 @@ const MyListings = () => {
     }
   };
 
-  if (loading) return <Loading />;
+  // Modern skeleton rows for loading state
+  const renderSkeletons = () => (
+    <div className="space-y-4">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="bg-white border border-slate-200/60 rounded-2xl p-6 shadow-premium flex flex-col md:flex-row justify-between items-start md:items-center gap-6 overflow-hidden">
+          <div className="space-y-3 flex-1 w-full">
+            <div className="h-5 w-1/3 shimmer-loader rounded" />
+            <div className="h-4 w-1/2 shimmer-loader rounded" />
+            <div className="flex space-x-3 pt-1">
+              <div className="h-4.5 w-16 shimmer-loader rounded-md" />
+              <div className="h-4.5 w-24 shimmer-loader rounded-md" />
+              <div className="h-4.5 w-16 shimmer-loader rounded-full" />
+            </div>
+          </div>
+          <div className="flex space-x-3 w-full md:w-auto shrink-0">
+            <div className="h-10 w-20 shimmer-loader rounded-xl flex-1 md:flex-initial" />
+            <div className="h-10 w-20 shimmer-loader rounded-xl flex-1 md:flex-initial" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">My Listings</h1>
+    <div className="min-h-screen bg-slate-50/50 py-10">
+      <div className="container mx-auto px-6 max-w-4xl space-y-8 animate-fade-in-up">
+        {/* Page title */}
+        <div>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">My Listings</h1>
+          <p className="text-slate-500 text-sm mt-1">Manage, update, or remove the listings you have published</p>
+        </div>
 
-        {/* Tabs */}
-        <div className="flex space-x-4 mb-8 border-b">
+        {/* Sliding Pill Tabs */}
+        <div className="flex bg-slate-100 p-1.5 rounded-2xl max-w-md border border-slate-200/50">
           <button
             onClick={() => setActiveTab('apartments')}
-            className={`pb-4 px-4 font-semibold transition ${
+            className={`flex-1 text-center py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
               activeTab === 'apartments'
-                ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-slate-950 shadow-sm'
+                : 'text-slate-500 hover:text-slate-800'
             }`}
           >
             Apartments ({apartments.length})
           </button>
           <button
             onClick={() => setActiveTab('roommates')}
-            className={`pb-4 px-4 font-semibold transition ${
+            className={`flex-1 text-center py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
               activeTab === 'roommates'
-                ? 'border-b-2 border-purple-600 text-purple-600'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-slate-950 shadow-sm'
+                : 'text-slate-500 hover:text-slate-800'
             }`}
           >
-            Roommate Listings ({roommates.length})
+            Roommates ({roommates.length})
           </button>
         </div>
 
-        {/* Apartment Listings */}
-        {activeTab === 'apartments' && (
+        {loading ? (
+          renderSkeletons()
+        ) : (
           <div>
-            {apartments.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-lg">
-                <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">No apartment listings</h3>
-                <p className="text-gray-500 mb-4">Create your first apartment listing</p>
-                <button
-                  onClick={() => navigate('/apartments/create')}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-                >
-                  + Create Listing
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6">
-                {apartments.map((apartment) => (
-                  <div key={apartment.listingId} className="bg-white rounded-lg shadow-md p-6">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">{apartment.title}</h3>
-                        <p className="text-gray-600 mb-2">{apartment.address}</p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <span>{apartment.bhkCount.replace('_', ' ')}</span>
-                          <span>•</span>
-                          <span>₹{apartment.rent.toLocaleString()}/month</span>
-                          <span>•</span>
-                          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full">
-                            {apartment.status}
-                          </span>
+            {/* Apartment Listings */}
+            {activeTab === 'apartments' && (
+              <div className="space-y-4">
+                {apartments.length === 0 ? (
+                  <div className="text-center py-20 bg-white border border-slate-200/50 rounded-2xl shadow-premium space-y-5">
+                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+                      🏢
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-bold text-slate-800">No apartments listed</h3>
+                      <p className="text-slate-400 text-sm max-w-sm mx-auto">
+                        You have not published any apartment listings yet.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => navigate('/apartments/create')}
+                      className="bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-6 rounded-xl transition duration-200 text-sm shadow-sm"
+                    >
+                      + Create Apartment Listing
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {apartments.map((apartment) => (
+                      <div key={apartment.listingId} className="premium-card bg-white rounded-2xl p-6 shadow-premium relative overflow-hidden">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                          <div className="space-y-2 flex-1">
+                            <div className="flex items-center space-x-2 flex-wrap gap-y-1.5">
+                              <h3 className="text-lg font-bold text-slate-900 tracking-tight">{apartment.title}</h3>
+                              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                apartment.status.toLowerCase() === 'active'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                                  : 'bg-amber-50 text-amber-700 border border-amber-100'
+                              }`}>
+                                {apartment.status}
+                              </span>
+                            </div>
+                            <p className="text-slate-500 text-xs flex items-center">
+                              <svg className="w-3.5 h-3.5 mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                              </svg>
+                              {apartment.address}
+                            </p>
+                            <div className="flex items-center space-x-3 text-xs text-slate-500 pt-1">
+                              <span className="font-semibold text-slate-700">{apartment.bhkCount.replace('_', ' ')}</span>
+                              <span className="text-slate-300">•</span>
+                              <span className="font-bold text-slate-800">₹{apartment.rent.toLocaleString()}/month</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center space-x-3 w-full md:w-auto shrink-0 border-t border-slate-100 md:border-none pt-4 md:pt-0">
+                            <button
+                              onClick={() => navigate(`/apartments/${apartment.listingId}`)}
+                              className="flex-1 md:flex-initial text-center px-4 py-2.5 border border-slate-200 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-50 transition duration-200"
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() => handleDelete('apartment', apartment.listingId)}
+                              className="flex-1 md:flex-initial text-center px-4 py-2.5 bg-rose-50 text-rose-600 font-bold border border-rose-100 rounded-xl text-xs hover:bg-rose-100/50 transition duration-200"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => navigate(`/apartments/${apartment.listingId}`)}
-                          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                        >
-                          View
-                        </button>
-                        <button
-                          onClick={() => handleDelete('apartment', apartment.listingId)}
-                          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             )}
-          </div>
-        )}
 
-        {/* Roommate Listings */}
-        {activeTab === 'roommates' && (
-          <div>
-            {roommates.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-lg">
-                <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">No roommate listings</h3>
-                <p className="text-gray-500 mb-4">Create your first roommate listing</p>
-                <button
-                  onClick={() => navigate('/roommates/create')}
-                  className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
-                >
-                  + Create Listing
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6">
-                {roommates.map((listing) => (
-                  <div key={listing.listingId} className="bg-white rounded-lg shadow-md p-6">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">
-                          Looking for {listing.lookingForCount} {listing.lookingForCount === 1 ? 'Roommate' : 'Roommates'}
-                        </h3>
-                        <p className="text-gray-600 mb-2">{listing.description}</p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <span>{listing.genderPreference.replace('_', ' ')}</span>
-                          <span>•</span>
-                          <span>₹{listing.budgetPerPerson.toLocaleString()}/person</span>
-                          <span>•</span>
-                          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full">
-                            {listing.status}
-                          </span>
+            {/* Roommate Listings */}
+            {activeTab === 'roommates' && (
+              <div className="space-y-4">
+                {roommates.length === 0 ? (
+                  <div className="text-center py-20 bg-white border border-slate-200/50 rounded-2xl shadow-premium space-y-5">
+                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+                      👥
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-bold text-slate-800">No roommate profile listed</h3>
+                      <p className="text-slate-400 text-sm max-w-sm mx-auto">
+                        You have not published any roommate search listings yet.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => navigate('/roommates/create')}
+                      className="bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-6 rounded-xl transition duration-200 text-sm shadow-sm"
+                    >
+                      + Create Roommate Listing
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {roommates.map((listing) => (
+                      <div key={listing.listingId} className="premium-card bg-white rounded-2xl p-6 shadow-premium relative overflow-hidden">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                          <div className="space-y-2 flex-1">
+                            <div className="flex items-center space-x-2 flex-wrap gap-y-1.5">
+                              <h3 className="text-lg font-bold text-slate-900 tracking-tight">
+                                Looking for {listing.lookingForCount} {listing.lookingForCount === 1 ? 'Roommate' : 'Roommates'}
+                              </h3>
+                              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                listing.status.toLowerCase() === 'active'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                                  : 'bg-amber-50 text-amber-700 border border-amber-100'
+                              }`}>
+                                {listing.status}
+                              </span>
+                            </div>
+                            {listing.description && (
+                              <p className="text-slate-500 text-xs font-light line-clamp-2 max-w-xl">
+                                "{listing.description}"
+                              </p>
+                            )}
+                            <div className="flex items-center space-x-3 text-xs text-slate-500 pt-1">
+                              <span className="font-semibold text-slate-700 capitalize">{listing.genderPreference.replace('_', ' ').toLowerCase()} Preference</span>
+                              <span className="text-slate-300">•</span>
+                              <span className="font-bold text-slate-800">₹{listing.budgetPerPerson.toLocaleString()}/person</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center space-x-3 w-full md:w-auto shrink-0 border-t border-slate-100 md:border-none pt-4 md:pt-0">
+                            <button
+                              onClick={() => navigate(`/roommates/${listing.listingId}`)}
+                              className="flex-1 md:flex-initial text-center px-4 py-2.5 border border-slate-200 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-50 transition duration-200"
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() => handleDelete('roommate', listing.listingId)}
+                              className="flex-1 md:flex-initial text-center px-4 py-2.5 bg-rose-50 text-rose-600 font-bold border border-rose-100 rounded-xl text-xs hover:bg-rose-100/50 transition duration-200"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => navigate(`/roommates/${listing.listingId}`)}
-                          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                        >
-                          View
-                        </button>
-                        <button
-                          onClick={() => handleDelete('roommate', listing.listingId)}
-                          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>

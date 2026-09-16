@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -41,8 +41,16 @@ api.interceptors.response.use(
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
-  verifyEmail: (token) => api.get('/auth/verify-email', { params: { token } }),  // ✅ ADDED
-  resendVerification: (userId) => api.post('/auth/resend-verification', null, { params: { userId } }),  // ✅ ADDED
+};
+
+// File Upload APIs
+export const fileAPI = {
+  upload: (formData) => api.post('/files/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
+  uploadMultiple: (formData) => api.post('/files/upload-multiple', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
 };
 
 // User APIs
